@@ -1,15 +1,16 @@
 power = True
+
 resources = {
     "Water": 1000,
-    "Milk": 500,
-    "Coffee": 500,
+    "Milk": 110,
+    "Coffee": 200,
     "Money": 0,
 }
 
 espresso = {
     "Name": "espresso",
     "Water": 100,
-    "Milk": 50,
+    "Milk": 0,
     "Coffee": 50,
     "Money": 1,
 }
@@ -30,21 +31,19 @@ latte = {
     "Money": 2,
 }
 
-coins = {
-    "quarters": 0.25,
-    "dimes": 0.10,
-    "nickles": 0.05,
-    "pennies": 0.01,
-}
-
 
 def check_resources(drink):
     if resources["Water"] < drink["Water"]:
         print("Sorry there is not enough water.")
-    if resources["Milk"] < drink["Milk"]:
+        return False
+    elif resources["Milk"] < drink["Milk"]:
         print("Sorry there is not enough milk.")
-    if resources["Coffee"] < drink["Coffee"]:
+        return False
+    elif resources["Coffee"] < drink["Coffee"]:
         print("Sorry there is not enough coffee.")
+        return False
+    else:
+        return True
 
 
 def update_resources(drink):
@@ -64,7 +63,8 @@ def total_money():
 
 
 def select_drink(drink):
-    check_resources(drink)
+    if not check_resources(drink):
+        return
     update_resources(drink)
     print(f"price for {drink['Name']} is: {drink['Money']}")
     money = total_money()
@@ -76,7 +76,7 @@ def select_drink(drink):
 
 
 while power:
-    user_select = input("What would you like? (espresso/latte/cappuccino): ")
+    user_select = input("\nWhat would you like? (espresso/latte/cappuccino): ")
     if user_select == "off":
         power = False
     if user_select == "report":
