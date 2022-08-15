@@ -1,122 +1,92 @@
-# #Day12
-#
-# import random
-#
-# number = random.randint(1, 100)
-#
-# level = input("Welcome to the Number Guessing Game! \n"
-#               "I'm thinking of a number between 1 and 100. \n"
-#               f"Pssst, the correct answer is {number} \n"
-#               "Choose a difficulty. Type 'easy' or 'hard':")
-#
-# if level == 'hard':
-#     number_of_attempts = 5
-# else:
-#     number_of_attempts = 10
-#
-#
-# def game():
-#     global number_of_attempts, number
-#     while number_of_attempts > 0:
-#         print(f"You have {number_of_attempts} remaining to guess the number.")
-#         answer = input("Make a guess: ")
-#         if int(answer) < number:
-#             print("Too low.")
-#         elif int(answer) > number:
-#             print("Too high.")
-#         number_of_attempts -= 1
-#         if int(answer) == number:
-#             print(f"You got it! The answer was {number}.")
-#             return
-#     if number_of_attempts == 0:
-#         print("You've run out of guesses, you lose.")
-#
-#
-# game()
+power = True
+resources = {
+    "Water": 1000,
+    "Milk": 500,
+    "Coffee": 500,
+    "Money": 0,
+}
 
-# Day 13
+espresso = {
+    "Name": "espresso",
+    "Water": 100,
+    "Milk": 50,
+    "Coffee": 50,
+    "Money": 1,
+}
 
-############DEBUGGING#####################
+cappuccino = {
+    "Name": "cappuccino",
+    "Water": 150,
+    "Milk": 100,
+    "Coffee": 30,
+    "Money": 1.5,
+}
 
-# Describe Problem
-# def my_function():
-#     for i in range(1, 21):
-#         if i == 20:
-#             print("You got it")
-#
-#
-# my_function()
+latte = {
+    "Name": "latte",
+    "Water": 150,
+    "Milk": 100,
+    "Coffee": 40,
+    "Money": 2,
+}
 
-# Reproduce the Bug
-# from random import randint
-# dice_imgs = ["❶", "❷", "❸", "❹", "❺", "❻"]
-# dice_num = randint(0, 5)
-# print(dice_imgs[dice_num])
+coins = {
+    "quarters": 0.25,
+    "dimes": 0.10,
+    "nickles": 0.05,
+    "pennies": 0.01,
+}
 
 
-# # Play Computer
-# year = int(input("What's your year of birth?"))
-# if 1980 < year < 1994:
-#     print("You are a millenial.")
-# elif year >= 1994:
-#     print("You are a Gen Z.")
+def check_resources(drink):
+    if resources["Water"] < drink["Water"]:
+        print("Sorry there is not enough water.")
+    if resources["Milk"] < drink["Milk"]:
+        print("Sorry there is not enough milk.")
+    if resources["Coffee"] < drink["Coffee"]:
+        print("Sorry there is not enough coffee.")
 
 
-# # Fix the Errors
-# age = input("How old are you?")
-# if int(age) > 18:
-#     print(f"You can drive at age {age}.")
+def update_resources(drink):
+    resources["Water"] -= drink["Water"]
+    resources["Milk"] -= drink["Milk"]
+    resources["Coffee"] -= drink["Coffee"]
+    resources["Money"] += drink["Money"]
 
 
-# #Print is Your Friend
-#
-# pages = int(input("Number of pages: "))
-# word_per_page = int(input("Number of words per page: "))
-# total_words = pages * word_per_page
-# print(total_words)
-
-# # Use a Debugger
-# def mutate(a_list):
-#     b_list = []
-#     for item in a_list:
-#         new_item = item * 2
-#         b_list.append(new_item)
-#     print(b_list)
-#
-#
-# mutate([1, 2, 3, 5, 8, 13])
-import random
-import pyautogui
-
-from art import logo, vs
-from game_data import data
-
-is_game_over = False
-score = 0
-random_A = random.randint(0, len(data) - 1)
-random_B = random_A
-answer = ""
+def total_money():
+    print("Please insert coins.\U0001F4B2")
+    quarters = float(input("how many quarters?: "))
+    dimes = float(input("how many dimes?: "))
+    nickles = float(input("how many nickles?: "))
+    pennies = float(input("how many pennies?: "))
+    return 0.25 * quarters + 0.1 * dimes + 0.05 * nickles + 0.01 * pennies
 
 
-def game():
-    global score, is_game_over, answer, random_B, random_A
-    while data[random_A]['follower_count'] == data[random_B]['follower_count']:
-        random_B = random.randint(0, len(data) - 1)
-    print(logo)
-    print(f"Your score is: {score}")
-    print(f"Compare A: {data[random_A]['name']}, a {data[random_A]['description']}, from {data[random_A]['country']}.")
-    print(vs)
-    print(f"Against B: {data[random_B]['name']}, a {data[random_B]['description']}, from {data[random_B]['country']}.")
-    answer = input("Who has more followers? Type 'A' or 'B': ")
-    if (answer == 'A' and data[random_A]['follower_count'] > data[random_B]['follower_count']) or \
-       (answer == 'B' and data[random_A]['follower_count'] < data[random_B]['follower_count']):
-        score += 1
+def select_drink(drink):
+    check_resources(drink)
+    update_resources(drink)
+    print(f"price for {drink['Name']} is: {drink['Money']}")
+    money = total_money()
+    if money < drink['Money']:
+        print("Sorry that's not enough money. Money refunded.")
     else:
-        print(f"Sorry, that's wrong. Final score: {score}")
-        is_game_over = True
-    pyautogui.hotkey('CTRL', 'l')
-    random_A = random_B
+        print(f"Here is {(money - drink['Money']):.2f}$ in change.")
+        print(f"Here is your {drink['Name']}. Enjoy!")
 
 
-while not is_game_over:
-    game()
+while power:
+    user_select = input("What would you like? (espresso/latte/cappuccino): ")
+    if user_select == "off":
+        power = False
+    if user_select == "report":
+        print(f'Water: {resources["Water"]}ml \n'
+              f'Milk: {resources["Milk"]}ml \n'
+              f'Coffee: {resources["Coffee"]}g \n'
+              f'Money: {resources["Money"]}$ \n')
+    if user_select == "espresso":
+        select_drink(espresso)
+    if user_select == "latte":
+        select_drink(latte)
+    if user_select == "cappuccino":
+        select_drink(cappuccino)
